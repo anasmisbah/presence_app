@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>908774424466-5bun36mjcm1qu2hfj8efg7h63v7h2h39.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.908774424466-5bun36mjcm1qu2hfj8efg7h63v7h2h39</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>908774424466-vgo6plsh51mh3dm540b7q4o0qre021ga.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBsviDHQl_oUNRM06thfsFDAesDtHvc-Cg</string>
+	<key>GCM_SENDER_ID</key>
+	<string>908774424466</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.anasmisbah.presenceApp</string>
+	<key>PROJECT_ID</key>
+	<string>noctaapp-ed0e0</string>
+	<key>STORAGE_BUCKET</key>
+	<string>noctaapp-ed0e0.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:908774424466:ios:388be4b04f832c79594b4b</string>
+	<key>DATABASE_URL</key>
+	<string>https://noctaapp-ed0e0.firebaseio.com</string>
+</dict>
+</plist>

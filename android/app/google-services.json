@@ -1,0 +1,119 @@
+{
+  "project_info": {
+    "project_number": "908774424466",
+    "firebase_url": "https://noctaapp-ed0e0.firebaseio.com",
+    "project_id": "noctaapp-ed0e0",
+    "storage_bucket": "noctaapp-ed0e0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:908774424466:android:fafed90094978aff594b4b",
+        "android_client_info": {
+          "package_name": "com.anasmisbah.presence_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "908774424466-mlhvr11r5tee0jma83rv3et7jb4cvtd0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUhXaGjuL--0AqYMulKZ_0xHEIXTs1EcA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "908774424466-mlhvr11r5tee0jma83rv3et7jb4cvtd0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "908774424466-5bun36mjcm1qu2hfj8efg7h63v7h2h39.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.anasmisbah.presenceApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:908774424466:android:425c44ba71e64e4f594b4b",
+        "android_client_info": {
+          "package_name": "com.example.push_notification_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "908774424466-mlhvr11r5tee0jma83rv3et7jb4cvtd0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUhXaGjuL--0AqYMulKZ_0xHEIXTs1EcA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "908774424466-mlhvr11r5tee0jma83rv3et7jb4cvtd0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "908774424466-5bun36mjcm1qu2hfj8efg7h63v7h2h39.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.anasmisbah.presenceApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:908774424466:android:b3cc5fa6e49a31dd594b4b",
+        "android_client_info": {
+          "package_name": "com.example.uber"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "908774424466-mlhvr11r5tee0jma83rv3et7jb4cvtd0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUhXaGjuL--0AqYMulKZ_0xHEIXTs1EcA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "908774424466-mlhvr11r5tee0jma83rv3et7jb4cvtd0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "908774424466-5bun36mjcm1qu2hfj8efg7h63v7h2h39.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.anasmisbah.presenceApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
