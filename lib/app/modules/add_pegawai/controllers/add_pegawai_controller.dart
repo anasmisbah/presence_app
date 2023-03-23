@@ -25,13 +25,15 @@ class AddPegawaiController extends GetxController {
         if (userCredential.user != null) {
           String uid = userCredential.user!.uid;
 
-          firestore.collection("pegawai").doc(uid).set({
+          await firestore.collection("pegawai").doc(uid).set({
             "nip": nipC.text,
             "name": nameC.text,
             "email": emailC.text,
             "uid": uid,
             "created_at": DateTime.now().toIso8601String(),
           });
+
+          await userCredential.user!.sendEmailVerification();
         }
 
         print(userCredential);
