@@ -18,7 +18,11 @@ class LoginController extends GetxController {
 
         if (userCredential.user != null) {
           if (userCredential.user!.emailVerified == true) {
-            Get.offNamed(Routes.HOME);
+            if (passC.text == "qweasdzxc") {
+              Get.offAllNamed(Routes.NEW_PASSWORD);
+            } else {
+              Get.offAllNamed(Routes.HOME);
+            }
           } else {
             Get.defaultDialog(
                 actions: [
@@ -32,9 +36,11 @@ class LoginController extends GetxController {
                     onPressed: () async {
                       try {
                         await userCredential.user!.sendEmailVerification();
-                        Get.snackbar('Berhasil', 'Email verifikasi telah dikirim ulang, cek email kamu sekarang juga!');
+                        Get.snackbar('Berhasil',
+                            'Email verifikasi telah dikirim ulang, cek email kamu sekarang juga!');
                       } catch (e) {
-                        Get.snackbar('Terjadi Kesalahan', 'Tidak dapat mengirim ulang email verifikasi,hubungi admin atau CS');
+                        Get.snackbar('Terjadi Kesalahan',
+                            'Tidak dapat mengirim ulang email verifikasi,hubungi admin atau CS');
                       }
                     },
                     child: Text('Kirim ulang'),
