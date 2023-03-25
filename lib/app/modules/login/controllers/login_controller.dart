@@ -9,25 +9,30 @@ class LoginController extends GetxController {
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
-  void login() async {
+  RxBool isLoading = false.obs;
+
+  Future login() async {
     if (emailC.text.isNotEmpty && passC.text.isNotEmpty) {
+      isLoading.value = true;
       try {
         final userCredential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(
                 email: emailC.text, password: passC.text);
-
         if (userCredential.user != null) {
           if (userCredential.user!.emailVerified == true) {
+            isLoading.value = false;
             if (passC.text == "qweasdzxc") {
               Get.offAllNamed(Routes.NEW_PASSWORD);
             } else {
               Get.offAllNamed(Routes.HOME);
             }
           } else {
+            isLoading.value = true;
             Get.defaultDialog(
                 actions: [
                   OutlinedButton(
                     onPressed: () {
+                      isLoading.value = false;
                       Get.back();
                     },
                     child: Text('cancel'),
@@ -35,10 +40,12 @@ class LoginController extends GetxController {
                   ElevatedButton(
                     onPressed: () async {
                       try {
+                        isLoading.value = false;
                         await userCredential.user!.sendEmailVerification();
                         Get.snackbar('Berhasil',
                             'Email verifikasi telah dikirim ulang, cek email kamu sekarang juga!');
                       } catch (e) {
+                        isLoading.value = false;
                         Get.snackbar('Terjadi Kesalahan',
                             'Tidak dapat mengirim ulang email verifikasi,hubungi admin atau CS');
                       }
@@ -51,7 +58,9 @@ class LoginController extends GetxController {
                     "Kamu belum verifikasi email, lakukan verifikasi melalui email anda");
           }
         }
+        isLoading.value = false;
       } on FirebaseAuthException catch (e) {
+        isLoading.value = false;
         if (e.code == 'user-not-found') {
           Get.snackbar(
               'Terjadi Kesalahan', 'Pegawai dengan email ini tidak ditemukan');

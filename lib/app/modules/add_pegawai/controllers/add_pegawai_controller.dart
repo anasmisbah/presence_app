@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AddPegawaiController extends GetxController {
+  RxBool isLoading = false.obs;
+  RxBool isLoadingAddPegawai = false.obs;
+
   TextEditingController nameC = TextEditingController();
   TextEditingController nipC = TextEditingController();
   TextEditingController emailC = TextEditingController();
@@ -13,21 +16,26 @@ class AddPegawaiController extends GetxController {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  void addPegawai() async {
+  Future addPegawai() async {
     print("add pegawai");
     if (nameC.text.isNotEmpty &&
         nipC.text.isNotEmpty &&
         emailC.text.isNotEmpty) {
+      isLoading.value = true;
       Get.defaultDialog(
           title: "Validasi Admin",
           content: Column(
             children: [
               Text("Masukkan password untuk validasi admin"),
+              SizedBox(
+                height: 10,
+              ),
               TextField(
                 controller: passC,
                 autocorrect: false,
                 obscureText: true,
                 decoration: InputDecoration(
+                  labelText: "password",
                   border: OutlineInputBorder(),
                 ),
               )
@@ -36,24 +44,30 @@ class AddPegawaiController extends GetxController {
           actions: [
             OutlinedButton(
               onPressed: () {
+                isLoading.value = false;
                 Get.back();
               },
               child: Text("Cancel"),
             ),
-            ElevatedButton(
-              onPressed: () async {
-                await prosesAddPegawai();
-              },
-              child: Text("Add Pegawai"),
-            )
+            Obx(() => ElevatedButton(
+                  onPressed: () async {
+                    if (isLoadingAddPegawai.isFalse) {
+                      await prosesAddPegawai();
+                      isLoading.value = false;
+                    }
+                  },
+                  child:isLoadingAddPegawai.isFalse? Text("Add Pegawai"):Text("lOADING.."),
+                ))
           ]);
     } else {
+      isLoading.value = false;
       Get.snackbar('Terjadi Kesalahan', 'NIP, nama, dan email harus diisi');
     }
   }
 
   Future prosesAddPegawai() async {
     if (passC.text.isNotEmpty) {
+      isLoadingAddPegawai.value = true;
       try {
         String emailAdmin = auth.currentUser!.email!;
 
@@ -85,13 +99,14 @@ class AddPegawaiController extends GetxController {
             await auth.signInWithEmailAndPassword(
                 email: emailAdmin, password: passC.text);
           }
-
+          isLoadingAddPegawai.value = false;
           print(pegawaiCredential);
-          Get.back(); //tututp dialog 
+          Get.back(); //tututp dialog
           Get.back(); //kembali ke home
           Get.snackbar('Berhasil', 'Berhasil menambahkan pegawai');
         }
       } on FirebaseAuthException catch (e) {
+        isLoadingAddPegawai.value = false;
         print(e.code);
         if (e.code == 'weak-password') {
           Get.snackbar(
@@ -108,6 +123,8 @@ class AddPegawaiController extends GetxController {
         Get.snackbar('Terjadi Kesalahan', 'Tidak dapat menambahkan pegawai');
       }
     } else {
+      isLoadingAddPegawai.value = false;
+      isLoading.value = false;
       Get.snackbar('Terjadi Kesalahan', 'password harus diisi');
     }
   }

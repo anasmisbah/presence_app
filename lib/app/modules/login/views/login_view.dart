@@ -39,11 +39,17 @@ class LoginView extends GetView<LoginController> {
           SizedBox(
             height: 25,
           ),
-          ElevatedButton(
-            onPressed: () {
-              controller.login();
-            },
-            child: Text("Login"),
+          Obx(
+            () => ElevatedButton(
+              onPressed: () async {
+                if (controller.isLoading.isFalse) {
+                  await controller.login();
+                }
+              },
+              child: controller.isLoading.isFalse
+                  ? Text("Login")
+                  : Text("Loading.."),
+            ),
           ),
           TextButton(
             onPressed: () {},
