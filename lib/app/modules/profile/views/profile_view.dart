@@ -12,7 +12,7 @@ class ProfileView extends GetView<ProfileController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ProfileView'),
+        title: const Text('Profile'),
         centerTitle: true,
       ),
       body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
@@ -67,10 +67,12 @@ class ProfileView extends GetView<ProfileController> {
                     height: 20,
                   ),
                   ListTile(
+                    onTap: () => Get.toNamed(Routes.UPDATE_PROFILE,arguments: user),
                     leading: Icon(Icons.person),
                     title: Text("Update Profile"),
                   ),
                   ListTile(
+                    onTap: () => Get.toNamed(Routes.UPDATE_PASSWORD),
                     leading: Icon(Icons.vpn_key),
                     title: Text("Update Password"),
                   ),
