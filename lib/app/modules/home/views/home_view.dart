@@ -22,14 +22,17 @@ class HomeView extends GetView<HomeController> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return SizedBox();
               }
-              String role = snapshot.data!.data()!["role"];
-              return IconButton(
-                onPressed: () {
-                  Get.toNamed(
-                      role == "admin" ? Routes.ADD_PEGAWAI : Routes.PROFILE);
-                },
-                icon: Icon(Icons.person),
-              );
+              if (snapshot.hasData) {
+                // String role = snapshot.data!.data()!["role"];
+                return IconButton(
+                  onPressed: () {
+                    Get.toNamed(Routes.PROFILE);
+                  },
+                  icon: Icon(Icons.person),
+                );
+              } else {
+                return SizedBox();
+              }
             },
           ),
         ],
