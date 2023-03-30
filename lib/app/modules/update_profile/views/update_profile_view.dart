@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -52,6 +54,63 @@ class UpdateProfileView extends GetView<UpdateProfileController> {
               labelText: "NAME",
               border: OutlineInputBorder(),
             ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Text(
+            "Photo Profile",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // user['profile'] != null && user['profile'] != ""
+              //     ? Text("Foto Profile")
+              //     : Text("No choosen"),
+              GetBuilder<UpdateProfileController>(
+                builder: (c) {
+                  if (c.image != null) {
+                    return ClipOval(
+                      child: Container(
+                        height: 100,
+                        width: 100,
+                        child: Image.file(
+                          File(c.image!.path),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  } else {
+                    if (user['profile'] != null && user['profile'] != "") {
+                      return ClipOval(
+                        child: Container(
+                          height: 100,
+                          width: 100,
+                          child: Image.network(
+                            user['profile'],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    } else {
+                      return Text("No image choosen");
+                    }
+                  }
+                },
+              ),
+              TextButton(
+                onPressed: () {
+                  controller.pickImage();
+                },
+                child: Text("Choose"),
+              ),
+            ],
           ),
           SizedBox(
             height: 30,

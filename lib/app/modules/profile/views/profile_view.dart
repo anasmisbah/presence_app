@@ -25,6 +25,8 @@ class ProfileView extends GetView<ProfileController> {
             }
             if (snapshot.hasData) {
               Map<String, dynamic> user = snapshot.data!.data()!;
+              String defaultImage =
+                  "https://ui-avatars.com/api/?name=${user['name']}";
               return ListView(
                 padding: EdgeInsets.all(20),
                 children: [
@@ -36,7 +38,11 @@ class ProfileView extends GetView<ProfileController> {
                           width: 100,
                           height: 100,
                           child: Image.network(
-                            "https://ui-avatars.com/api/?name=${user['name']}",
+                            user["profile"] != null
+                                ? user["profile"] != ""
+                                    ? user["profile"]
+                                    : defaultImage
+                                : defaultImage,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -67,7 +73,8 @@ class ProfileView extends GetView<ProfileController> {
                     height: 20,
                   ),
                   ListTile(
-                    onTap: () => Get.toNamed(Routes.UPDATE_PROFILE,arguments: user),
+                    onTap: () =>
+                        Get.toNamed(Routes.UPDATE_PROFILE, arguments: user),
                     leading: Icon(Icons.person),
                     title: Text("Update Profile"),
                   ),
