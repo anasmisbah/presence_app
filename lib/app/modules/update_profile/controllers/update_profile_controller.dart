@@ -51,6 +51,8 @@ class UpdateProfileController extends GetxController {
           data.addAll({'profile': profileUrl});
         }
         firestore.collection("pegawai").doc(uid).update(data);
+        image = null;
+        update();
         Get.snackbar('Berhasil', 'Berhasil update profile');
       } on firebase_core.FirebaseException catch (e) {
         // ...
@@ -59,6 +61,19 @@ class UpdateProfileController extends GetxController {
       } finally {
         isLoading.value = false;
       }
+    }
+  }
+
+  void deleteProfile(String uid) async {
+    try {
+      firestore
+          .collection("pegawai")
+          .doc(uid)
+          .update({'profile': FieldValue.delete()});
+      Get.back();
+      Get.snackbar('berhasil', 'berhasil delete profile picture');
+    } catch (e) {
+      Get.snackbar('Terjadi kesalahan', 'Tidak dapat delete profile');
     }
   }
 }
