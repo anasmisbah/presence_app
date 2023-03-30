@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_core;
 
 class UpdateProfileController extends GetxController {
   RxBool isLoading = false.obs;
@@ -16,6 +19,8 @@ class UpdateProfileController extends GetxController {
 
   final ImagePicker picker = ImagePicker();
   XFile? image;
+
+  final storage = firebase_core.FirebaseStorage.instance;
 
   void pickImage() async {
     image = await picker.pickImage(source: ImageSource.gallery);
@@ -34,8 +39,21 @@ class UpdateProfileController extends GetxController {
         nameC.text.isNotEmpty) {
       isLoading.value = true;
       try {
-        firestore.collection("pegawai").doc(uid).update({"name": nameC.text});
+        Map<String, dynamic> data = {
+          "name": nameC.text,
+        };
+        if (image != null) {
+          File file = File(image!.path);
+          String ext = image!.name.split(".").last;
+          await storage.ref("$uid/profile.$ext").putFile(file);
+          String profileUrl =
+              await storage.ref("$uid/profile.$ext").getDownloadURL();
+          data.addAll({'profile': profileUrl});
+        }
+        firestore.collection("pegawai").doc(uid).update(data);
         Get.snackbar('Berhasil', 'Berhasil update profile');
+      } on firebase_core.FirebaseException catch (e) {
+        // ...
       } catch (e) {
         Get.snackbar('Terjadi kesalahan', 'Tidak dapat update profile');
       } finally {
