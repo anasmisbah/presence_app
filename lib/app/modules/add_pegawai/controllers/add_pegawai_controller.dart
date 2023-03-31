@@ -10,6 +10,7 @@ class AddPegawaiController extends GetxController {
   TextEditingController nameC = TextEditingController();
   TextEditingController nipC = TextEditingController();
   TextEditingController emailC = TextEditingController();
+  TextEditingController jobC = TextEditingController();
 
   TextEditingController passC = TextEditingController();
 
@@ -20,7 +21,8 @@ class AddPegawaiController extends GetxController {
     print("add pegawai");
     if (nameC.text.isNotEmpty &&
         nipC.text.isNotEmpty &&
-        emailC.text.isNotEmpty) {
+        emailC.text.isNotEmpty &&
+        jobC.text.isNotEmpty) {
       isLoading.value = true;
       Get.defaultDialog(
           title: "Validasi Admin",
@@ -56,12 +58,15 @@ class AddPegawaiController extends GetxController {
                       isLoading.value = false;
                     }
                   },
-                  child:isLoadingAddPegawai.isFalse? Text("Add Pegawai"):Text("lOADING.."),
+                  child: isLoadingAddPegawai.isFalse
+                      ? Text("Add Pegawai")
+                      : Text("lOADING.."),
                 ))
           ]);
     } else {
       isLoading.value = false;
-      Get.snackbar('Terjadi Kesalahan', 'NIP, nama, dan email harus diisi');
+      Get.snackbar(
+          'Terjadi Kesalahan', 'NIP, nama, job, dan email harus diisi');
     }
   }
 
@@ -87,9 +92,10 @@ class AddPegawaiController extends GetxController {
             await firestore.collection("pegawai").doc(uid).set({
               "nip": nipC.text,
               "name": nameC.text,
+              "job": jobC.text,
               "email": emailC.text,
               "uid": uid,
-              "role":"pegawai",
+              "role": "pegawai",
               "created_at": DateTime.now().toIso8601String(),
             });
 
