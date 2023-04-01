@@ -57,14 +57,16 @@ class HomeView extends GetView<HomeController> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Welcome,",
+                          Text(
+                            "Welcome, ${user['name']}",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const Text("Jalan raya gandul"),
+                          Text(user['position'] != null
+                              ? "${user['position']['lat']}, ${user['position']['long']}"
+                              : "Belum ada lokasi"),
                         ],
                       )
                     ],
