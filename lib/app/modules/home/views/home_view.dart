@@ -25,7 +25,7 @@ class HomeView extends GetView<HomeController> {
           stream: controller.streamUser(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             }
@@ -34,7 +34,7 @@ class HomeView extends GetView<HomeController> {
               String defaultImage =
                   "https://ui-avatars.com/api/?name=${user['name']}";
               return ListView(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 children: [
                   Row(
                     children: [
@@ -51,29 +51,29 @@ class HomeView extends GetView<HomeController> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             "Welcome,",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text("Jalan raya gandul"),
+                          const Text("Jalan raya gandul"),
                         ],
                       )
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Container(
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       color: Colors.grey.shade200,
                       borderRadius: BorderRadius.circular(20),
@@ -83,38 +83,38 @@ class HomeView extends GetView<HomeController> {
                       children: [
                         Text(
                           "${user['job']}",
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Text(
                           "${user['nip']}",
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Text(
                           "${user['name']}",
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Container(
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       color: Colors.grey.shade200,
                       borderRadius: BorderRadius.circular(20),
@@ -124,8 +124,8 @@ class HomeView extends GetView<HomeController> {
                       children: [
                         Column(
                           children: [
-                            Text("Masuk"),
-                            Text("-"),
+                            const Text("Masuk"),
+                            const Text("-"),
                           ],
                         ),
                         Container(
@@ -135,79 +135,98 @@ class HomeView extends GetView<HomeController> {
                         ),
                         Column(
                           children: [
-                            Text("Keluar"),
-                            Text("-"),
+                            const Text("Keluar"),
+                            const Text("-"),
                           ],
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Divider(
                     color: Colors.grey.shade300,
                     thickness: 2,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         "Last 5 days ago",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
                       ),
-                      TextButton(onPressed: () {}, child: Text("See more")),
+                      TextButton(
+                          onPressed: () {
+                            Get.toNamed(Routes.ALL_PRESENSI);
+                          },
+                          child: const Text("See more")),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   ListView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: 5,
                     itemBuilder: (context, index) {
-                      return Container(
-                        padding: EdgeInsets.all(20),
-                        margin: EdgeInsets.only(bottom: 20),
-                        decoration: BoxDecoration(
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: Material(
                           color: Colors.grey.shade200,
                           borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Masuk",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(20),
+                            onTap: () {
+                              Get.toNamed(Routes.DETAIL_PRESENSI);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                // color: Colors.grey.shade200,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text(
+                                        "Masuk",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                          "${DateFormat.yMMMEd().format(DateTime.now())}"),
+                                    ],
                                   ),
-                                ),
-                                Text(
-                                    "${DateFormat.yMMMEd().format(DateTime.now())}"),
-                              ],
-                            ),
-                            Text("${DateFormat.jms().format(DateTime.now())}"),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "Keluar",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
+                                  Text(
+                                      "${DateFormat.jms().format(DateTime.now())}"),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  const Text(
+                                    "Keluar",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                      "${DateFormat.jms().format(DateTime.now())}"),
+                                ],
                               ),
                             ),
-                            Text("${DateFormat.jms().format(DateTime.now())}"),
-                          ],
+                          ),
                         ),
                       );
                     },
@@ -215,7 +234,7 @@ class HomeView extends GetView<HomeController> {
                 ],
               );
             } else {
-              return Center(
+              return const Center(
                 child: Text("Tidak dapat memuat database user"),
               );
             }
@@ -223,9 +242,9 @@ class HomeView extends GetView<HomeController> {
       bottomNavigationBar: ConvexAppBar(
         style: TabStyle.fixedCircle,
         items: [
-          TabItem(icon: Icons.home, title: 'Home'),
-          TabItem(icon: Icons.fingerprint, title: 'Add'),
-          TabItem(icon: Icons.people, title: 'Profile'),
+          const TabItem(icon: Icons.home, title: 'Home'),
+          const TabItem(icon: Icons.fingerprint, title: 'Add'),
+          const TabItem(icon: Icons.people, title: 'Profile'),
         ],
         initialActiveIndex: pageC.pageIndex.value,
         onTap: (int i) => pageC.changePage(i),
