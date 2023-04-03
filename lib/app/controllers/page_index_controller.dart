@@ -28,9 +28,16 @@ class PageIndexController extends GetxController {
             String address =
                 "${placemarks[0].street}, ${placemarks[0].subLocality}, ${placemarks[0].locality}";
             await updatePosition(position, address);
-
+            // Cek distance between 2 position
+            double distance = Geolocator.distanceBetween(
+              -0.9435367,
+              117.001475,
+              position.latitude,
+              position.longitude,
+            );
+            print(distance);
             // Absen
-            presensi(position, address);
+            presensi(position, address, distance);
           } catch (e) {
             Get.snackbar('Terjadi Kesalahan', "Gagal absen");
           }
@@ -51,13 +58,20 @@ class PageIndexController extends GetxController {
     }
   }
 
-  Future presensi(Position position, String address) async {
+  Future presensi(Position position, String address, double distance) async {
     String uid = auth.currentUser!.uid;
     CollectionReference<Map<String, dynamic>> colPresence =
-        await firestore.collection("pegawai").doc(uid).collection('presence');
+        firestore.collection("pegawai").doc(uid).collection('presence');
     QuerySnapshot<Map<String, dynamic>> snapPresence = await colPresence.get();
     DateTime now = DateTime.now();
     String todayDocId = DateFormat.yMd().format(now).replaceAll("/", "-");
+
+    String status = "Di luar area";
+    if (distance <= 200) {
+      // didalam area
+      status = "Di dalam area";
+    }
+
     if (snapPresence.docs.length == 0) {
       // belum pernah absen & set absen masuk
       colPresence.doc(todayDocId).set({
@@ -67,7 +81,8 @@ class PageIndexController extends GetxController {
           "lat": position.latitude,
           "long": position.longitude,
           "address": address,
-          "status": "Di dalam area",
+          "status": status,
+          "distance":distance,
         }
       });
     } else {
@@ -87,7 +102,8 @@ class PageIndexController extends GetxController {
               "lat": position.latitude,
               "long": position.longitude,
               "address": address,
-              "status": "Di dalam area",
+              "status": status,
+              "distance":distance,
             }
           });
         }
@@ -100,7 +116,8 @@ class PageIndexController extends GetxController {
             "lat": position.latitude,
             "long": position.longitude,
             "address": address,
-            "status": "Di dalam area",
+            "status": status,
+            "distance":distance,
           }
         });
       }
@@ -116,7 +133,7 @@ class PageIndexController extends GetxController {
       },
       "address": address,
     });
-    Get.snackbar('Berhasil absen', address);
+    // Get.snackbar('Berhasil absen', address);
   }
 
   /// Determine the current position of the device.
