@@ -54,20 +54,30 @@ class HomeView extends GetView<HomeController> {
                       const SizedBox(
                         width: 10,
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Welcome, ${user['name']}",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Welcome, ${user['name']}",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          Text(user['position'] != null
-                              ? "${user['position']['lat']}, ${user['position']['long']}"
-                              : "Belum ada lokasi"),
-                        ],
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              user['address'] != null
+                                  ? "${user['address']}"
+                                  : "Belum ada lokasi",
+                              style: TextStyle(
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
                       )
                     ],
                   ),

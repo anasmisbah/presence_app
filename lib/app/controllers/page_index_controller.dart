@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:presence_app/app/routes/app_pages.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 
 class PageIndexController extends GetxController {
   RxInt pageIndex = 0.obs;
@@ -17,9 +19,21 @@ class PageIndexController extends GetxController {
         Map<String, dynamic> res = await _determinePosition();
 
         if (res['error'] == false) {
-          Position position = res['position'];
-          updatePosition(position);
-          print("posisi : ${position.latitude}, ${position.longitude}");
+          try {
+            Position position = res['position'];
+            List<Placemark> placemarks = await placemarkFromCoordinates(
+              position.latitude,
+              position.longitude,
+            );
+            String address =
+                "${placemarks[0].street}, ${placemarks[0].subLocality}, ${placemarks[0].locality}";
+            await updatePosition(position, address);
+
+            // Absen
+            presensi(position, address);
+          } catch (e) {
+            Get.snackbar('Terjadi Kesalahan', "Gagal absen");
+          }
         } else {
           Get.snackbar('Terjadi Kesalahan', res['message']);
         }
@@ -37,19 +51,72 @@ class PageIndexController extends GetxController {
     }
   }
 
-  void updatePosition(Position position) async {
+  Future presensi(Position position, String address) async {
     String uid = auth.currentUser!.uid;
-    try {
-      await firestore.collection("pegawai").doc(uid).update({
-        "position": {
+    CollectionReference<Map<String, dynamic>> colPresence =
+        await firestore.collection("pegawai").doc(uid).collection('presence');
+    QuerySnapshot<Map<String, dynamic>> snapPresence = await colPresence.get();
+    DateTime now = DateTime.now();
+    String todayDocId = DateFormat.yMd().format(now).replaceAll("/", "-");
+    if (snapPresence.docs.length == 0) {
+      // belum pernah absen & set absen masuk
+      colPresence.doc(todayDocId).set({
+        "date": now.toIso8601String(),
+        "masuk": {
+          "date": now.toIso8601String(),
           "lat": position.latitude,
           "long": position.longitude,
+          "address": address,
+          "status": "Di dalam area",
         }
       });
-      Get.snackbar('Berhasil', "Berhasil absen");
-    } catch (e) {
-      Get.snackbar('Terjadi Kesalahan', "Gagal absen");
+    } else {
+      DocumentSnapshot<Map<String, dynamic>> todayDoc =
+          await colPresence.doc(todayDocId).get();
+      if (todayDoc.exists) {
+        // absen keluar/sudah absen masuk dan keluar
+        print("dijalankan todayDoc.exists");
+        Map<String, dynamic>? dataPresenceToday = todayDoc.data();
+        if (dataPresenceToday?["keluar"] != null) {
+          // Sudah absen keluar
+          Get.snackbar("Sukses", "Kamu telah absen masuk dan keluar.");
+        } else {
+          colPresence.doc(todayDocId).update({
+            "keluar": {
+              "date": now.toIso8601String(),
+              "lat": position.latitude,
+              "long": position.longitude,
+              "address": address,
+              "status": "Di dalam area",
+            }
+          });
+        }
+      } else {
+        // absen masuk
+        colPresence.doc(todayDocId).set({
+          "date": now.toIso8601String(),
+          "masuk": {
+            "date": now.toIso8601String(),
+            "lat": position.latitude,
+            "long": position.longitude,
+            "address": address,
+            "status": "Di dalam area",
+          }
+        });
+      }
     }
+  }
+
+  Future updatePosition(Position position, String address) async {
+    String uid = auth.currentUser!.uid;
+    await firestore.collection("pegawai").doc(uid).update({
+      "position": {
+        "lat": position.latitude,
+        "long": position.longitude,
+      },
+      "address": address,
+    });
+    Get.snackbar('Berhasil absen', address);
   }
 
   /// Determine the current position of the device.
