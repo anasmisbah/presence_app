@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:presence_app/app/routes/app_pages.dart';
@@ -37,7 +38,7 @@ class PageIndexController extends GetxController {
             );
             print(distance);
             // Absen
-            presensi(position, address, distance);
+            await presensi(position, address, distance);
           } catch (e) {
             Get.snackbar('Terjadi Kesalahan', "Gagal absen");
           }
@@ -73,21 +74,41 @@ class PageIndexController extends GetxController {
     }
 
     if (snapPresence.docs.length == 0) {
-      // belum pernah absen & set absen masuk
-      colPresence.doc(todayDocId).set({
-        "date": now.toIso8601String(),
-        "masuk": {
-          "date": now.toIso8601String(),
-          "lat": position.latitude,
-          "long": position.longitude,
-          "address": address,
-          "status": status,
-          "distance":distance,
-        }
-      });
+      // belum pernah absen & set absen masuk pertama kali kali
+      await Get.defaultDialog(
+        title: "Validasi presensi",
+        middleText: "Apakah kamu yakin akan mengisi daftar hadir sekarang",
+        actions: [
+          OutlinedButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: const Text("Cancel")),
+          ElevatedButton(
+              onPressed: () async {
+                await colPresence.doc(todayDocId).set(
+                  {
+                    "date": now.toIso8601String(),
+                    "masuk": {
+                      "date": now.toIso8601String(),
+                      "lat": position.latitude,
+                      "long": position.longitude,
+                      "address": address,
+                      "status": status,
+                      "distance": distance,
+                    }
+                  },
+                );
+                Get.back();
+                Get.snackbar("Sukses", "Kamu telah absen masuk.");
+              },
+              child: const Text("Yes"))
+        ],
+      );
     } else {
       DocumentSnapshot<Map<String, dynamic>> todayDoc =
           await colPresence.doc(todayDocId).get();
+
       if (todayDoc.exists) {
         // absen keluar/sudah absen masuk dan keluar
         print("dijalankan todayDoc.exists");
@@ -96,30 +117,65 @@ class PageIndexController extends GetxController {
           // Sudah absen keluar
           Get.snackbar("Sukses", "Kamu telah absen masuk dan keluar.");
         } else {
-          colPresence.doc(todayDocId).update({
-            "keluar": {
-              "date": now.toIso8601String(),
-              "lat": position.latitude,
-              "long": position.longitude,
-              "address": address,
-              "status": status,
-              "distance":distance,
-            }
-          });
+          await Get.defaultDialog(
+            title: "Validasi presensi",
+            middleText:
+                "Apakah kamu yakin akan mengisi daftar hadir ( KELUAR ) sekarang",
+            actions: [
+              OutlinedButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child: const Text("Cancel")),
+              ElevatedButton(
+                  onPressed: () async {
+                    await colPresence.doc(todayDocId).update({
+                      "keluar": {
+                        "date": now.toIso8601String(),
+                        "lat": position.latitude,
+                        "long": position.longitude,
+                        "address": address,
+                        "status": status,
+                        "distance": distance,
+                      }
+                    });
+                    Get.back();
+                    Get.snackbar("Sukses", "Kamu telah absen Keluar.");
+                  },
+                  child: const Text("Yes"))
+            ],
+          );
         }
       } else {
         // absen masuk
-        colPresence.doc(todayDocId).set({
-          "date": now.toIso8601String(),
-          "masuk": {
-            "date": now.toIso8601String(),
-            "lat": position.latitude,
-            "long": position.longitude,
-            "address": address,
-            "status": status,
-            "distance":distance,
-          }
-        });
+        await Get.defaultDialog(
+          title: "Validasi presensi",
+          middleText: "Apakah kamu yakin akan mengisi daftar hadir sekarang",
+          actions: [
+            OutlinedButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: const Text("Cancel")),
+            ElevatedButton(
+                onPressed: () async {
+                  await colPresence.doc(todayDocId).set({
+                    "date": now.toIso8601String(),
+                    "masuk": {
+                      "date": now.toIso8601String(),
+                      "lat": position.latitude,
+                      "long": position.longitude,
+                      "address": address,
+                      "status": status,
+                      "distance": distance,
+                    }
+                  });
+                  Get.back();
+                  Get.snackbar("Sukses", "Kamu telah absen masuk.");
+                },
+                child: const Text("Yes"))
+          ],
+        );
       }
     }
   }
